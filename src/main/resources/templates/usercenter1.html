@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headFragment(${title})">
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<nav th:replace="fragments/header :: navFragment"></nav>
+<main role="main">
+    <nav class="" id="nav1" style="background-color: #b8daff;height:180px;">
+        <div id="t1" class="row">
+
+            <div class="col-3" style="margin-top: 35px">
+                <div class="mx-auto position-relative">
+                    <img src="" style="border-radius:100%;float:right;width: 100px;height: 100px;"
+                         class="card-img-top avatar"
+                         th:src="@{'/image/' + ${user.photo}}" alt="userAvatar">
+                </div>
+            </div>
+            <div class="col-9" style="margin-top:35px">
+                <div style="font-weight:bold; font-size: 23px;">
+                    <a id="themeTitle" style="text-decoration: none;color: black;" href=""> <span
+                            th:text="${user.username}">XXX</span></a>
+
+                </div>
+                </br>
+                <div id="text6" style="font-size: 14px;">
+                    <span th:text="'类型:'+'  '+ ${user.type}"></span>
+
+                </div>
+                </br>
+                <div id="text" style="font-size: 14px;">
+                    <span th:text="'UID:'+ ${user.id}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span th:text="'Email:'+${user.email}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#t1" style="text-decoration: none"><span class="bg-primary text-white"
+                                                                      style="border-radius: 3px;font-size: 15px">Ta的帖子</span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#t2" style="text-decoration: none"><span class="bg-success text-white"
+                                                                      style="border-radius: 3px;font-size: 15px">Ta的回复</span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </nav>
+
+
+    <div class="container container-main">
+
+        <div class="row slide-up-fade-in">
+            <div class="col-md-3">
+                <h3 style="float: right;font-weight: bold">发布的帖子：</h3>
+
+            </div>
+
+            <div class="col-md-8">
+                <ul class="list-group" id="list-group1">
+                    <div th:if="${themes.isEmpty()}">空空如也，何不创造一个</div>
+                    <li class="list-group-item" id="list-group-item1" th:each="theme : ${themes}">
+
+
+                        <div class="row">
+
+                            <div class="col-1">
+                                <div class="mx-auto position-relative">
+                                    <img src="" style="border-radius:100%;float:right;width: 50px;height: 50px;"
+                                         class="card-img-top avatar"
+                                         th:src="@{'/image/' + ${idPhotoMap.get(theme.creatorId)}}" alt="userAvatar">
+                                </div>
+                            </div>
+                            <div class="col-11">
+                                <div style="font-weight:bold; font-size: 18px; margin-bottom:-23px;">
+                                    <a id="themeTitle1" style="text-decoration: none;color: black;" href="/"
+                                       th:href="@{/theme/view/{id}(id=${theme.id})}"> <span
+                                            th:text="${theme.title}">XXX</span></a>
+
+                                    <a href="#" th:href="@{/(category=${theme.categoryId})}"> <span
+                                            class="badge badge-warning float-right" style=""
+                                            th:style="'border-radius: 3px;background-color:'+${categoryIdColorMap.get(theme.categoryId)}"
+                                            th:text="${categoryMap.get(theme.categoryId)}">教育</span></a>
+
+
+                                </div>
+                                </br>
+                                <div id="text1" style="font-size: 14px; color: darkgrey;">
+
+
+                                <span style="font-weight: bold;color: darkgrey;">➥ <a href=""
+                                                                                      style=" text-decoration: none;color: darkgrey;"
+                                                                                      th:text="${idNameMap.get(theme.creatorId)}"></a></span>
+                                    <span th:text="${'创建于:'+ #dates.format(theme.publishTime,'yyyy-MM-dd HH:mm')}"></span>
+                                    <span class="float-right" style="color: darkgrey"
+                                          th:text="'回复量：'+${theme.resNumber}"></span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </li>
+
+                </ul>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!--回复-->
+        <div id="t2" class="row slide-up-fade-in" style="margin-top: 25px">
+            <div class="col-md-3">
+                <h3 style="float: right;font-weight: bold">最近回复：</h3>
+
+            </div>
+
+            <div class="col-md-8">
+                <div>
+                    <hr>
+                </div>
+                <ul class="list-group" id="list-group2">
+                    <div th:if="${themes.isEmpty()}">空空如也，何不创造一个</div>
+                    <li class="list-group-item" id="list-group-item3" th:each="response : ${responses}">
+
+
+                        <div class="row">
+
+                        </div>
+                        <div class="col-12">
+                            <div style="font-weight:bold; font-size: 18px; margin-bottom:-23px;">
+                                <a id="themeTitle2" style="text-decoration: none;color: black;" href="/"
+                                   th:href="@{/theme/view/{id}(id=${response.themeId})}"> <span
+                                        th:text="${themeIdNameMap.get(response.themeId)}">XXX</span></a>
+                            </div>
+
+                            </br>
+                            <div id="text2" style="font-size: 14px;margin-top: 10px">
+                                <span style="color: darkgrey">回复内容：</span>
+                                <span
+                                        th:text="${response.content}"></span>
+                            </div>
+
+                        </div>
+
+
+            </div>
+            </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+    </div>
+</main>
+
+
+</body>
+</html>

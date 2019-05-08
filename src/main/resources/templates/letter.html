@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headFragment(${title})">
+    <meta charset="UTF-8">
+    <title>向管理员私信</title>
+</head>
+<body class="">
+<nav th:replace="fragments/header :: navFragment"></nav>
+<div class="page" style="margin-top: -100px">
+    <div class="page-main">
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="page-header" style="margin-bottom: 50px">
+                    <h1 class="page-title" th:text="${title}"></h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="card bg-light">
+                            <form method="post" th:action="@{/letter}" th:object="${letter}">
+                                <input type="hidden" name="id" th:value="${letter.id}" th:if="${letter.id != null}">
+                                <div class="card-body">
+                                    <div class="form-group" th:if="${session.user.getType()=='user'}">
+                                        <label class="form-label" for="sendContent">私信内容：</label>
+                                        <textarea style="border-radius: 5px" placeholder="" id="sendContent"
+                                                  class="form-control" required
+                                                  rows="5" th:field="*{sendContent}"></textarea>
+                                    </div>
+                                    <div class="form-group" th:if="${session.user.getType()=='admin'}">
+                                        <label class="form-label" for="adminContent">回复内容：</label>
+                                        <textarea style="border-radius: 5px" placeholder="" id="adminContent"
+                                                  class="form-control" required
+                                                  rows="5" th:field="*{adminContent}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-right">
+                                    <a href="#" class="btn btn-secondary" th:href="@{/}">返回首页</a>
+                                    <input type="submit" class="btn btn-primary" value="发送">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card" th:if="${session.user.getType()=='user'}">
+                            <div class="card-header">私信说明</div>
+                            <div class="card-body">
+                                <span>可向管理员申诉，反馈论坛问题，但已经发现有恶意辱骂骚扰信息，立即对账号进行封禁！</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

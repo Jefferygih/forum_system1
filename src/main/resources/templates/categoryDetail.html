@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headFragment(${title})">
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<nav th:replace="fragments/header :: navFragment"></nav>
+
+<main role="main">
+
+    <div class="container container-main">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="col-sm-1">
+                <a class="btn btn-light btn-block" role="button" th:href="@{/}"><b><</b></a>
+            </div>
+            <div class="col-sm-2">
+                <h2 class="h2">详细分类</h2>
+            </div>
+            <div class="col-sm-7"></div>
+
+            <div class="col-sm-2">
+                <a class="btn btn-info btn-block" role="button" th:href="@{/theme/new}">新的话题</a>
+            </div>
+
+
+        </div>
+
+        <div class="alert alert-info" th:if="${categories.isEmpty()}">没有找到任何分类</div>
+        <div class="card-columns" style="margin-top: 25px;">
+
+            <div class="card text-center p-5"
+                 th:each="category : ${categories}" style=""
+                 th:style="'border-radius: 15px;background-color: '+${categoryIdColorMap.get(category.id)}">
+                <a href="#" style="text-decoration: none" th:href="@{/(category=${category.id})}">
+                    <div class="card-body">
+                        <h5 class="card-title text-white" th:text="${category.title}">Card title</h5>
+                        <p class="card-text text-white" th:text="${category.content}">Card content</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace=" fragments/footer :: footerFragment"></footer>
+</body>
+</html>

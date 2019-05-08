@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: headFragment('主题回复信息')">
+    <meta charset="UTF-8">
+    <title>主题回复信息</title>
+</head>
+<body class="">
+<div class="page">
+    <div class="page-main">
+        <div class="header" th:replace="admin/fragments/header :: headerFragment"></div>
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">主题回复信息</h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="card bg-warning">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="form-label">帖子名称</label>
+                                    <p th:text="${themeIdTitleMap.get(response.themeId)}"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">评论者</label>
+                                    <p th:text="${idNameMap.get(response.responderId)}"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">评论时间</label>
+                                    <p th:text="${#dates.format(response.recoveryTime, 'yyyy-MM-dd HH:mm')}"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">回复内容</label>
+                                    <p th:text="${response.content}"></p>
+                                </div>
+                                <div class="form-group" th:if="${response.photo != null}">
+                                    <label class="form-label">图片</label>
+                                    <img style="height:200px;width:190px" id="imageTheme1" src="" class="card-img-top"
+                                         th:src="@{'/image/' + ${response.photo}}"
+                                         alt="userAvatar">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-header">更多操作</div>
+                            <div class="card-body">
+                                <a class="btn btn-outline-danger btn-block"
+                                   th:href="@{/admin/response/delete/{id}(id=${response.id})}">删除此回复</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="admin/fragments/footer :: footerFragment"></footer>
+</body>
+</html>

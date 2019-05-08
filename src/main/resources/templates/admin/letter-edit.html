@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headFragment(${title})">
+    <meta charset="UTF-8">
+    <title>查看私信</title>
+</head>
+<body class="">
+<nav th:replace="fragments/header :: navFragment"></nav>
+<div class="page" style="margin-top: -100px">
+    <div class="page-main">
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="page-header" style="margin-bottom: 50px">
+                    <h1 class="page-title" th:text="${title}"></h1>
+                </div>
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="card bg-light">
+                            <form method="post" th:action="@{/admin/letter}" th:object="${letter}">
+                                <input type="hidden" name="id" th:value="${letter.id}" th:if="${letter.id != null}">
+                                <div class="card-body">
+
+                                    <div class="form-group">
+                                        <label class="form-label">发送人名称</label>
+                                        <p th:text="${idNameMap.get(letter.senderId)}"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">发送内容</label>
+                                        <p th:text="${letter.sendContent}"></p>
+                                    </div>
+
+                                    <div class="form-group"}>
+                                        <label class="form-label" for="adminContent">回复内容：</label>
+                                        <textarea style="border-radius: 5px" placeholder="" id="adminContent"
+                                                  class="form-control" required
+                                                  rows="5" th:field="*{adminContent}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-right">
+                                    <a href="#" class="btn btn-secondary" th:href="@{/admin/letter}">返回首页</a>
+                                    <input type="submit" class="btn btn-primary" value="发送">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card" th:if="${letter.id != null}">
+                            <div class="card-header">更多操作</div>
+                            <div class="card-body">
+                                <a class="btn btn-outline-danger btn-block"
+                                   th:href="@{/admin/letter/delete/{id}(id=${letter.id})}">删除此条私信</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

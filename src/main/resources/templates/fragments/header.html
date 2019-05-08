@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header fragment</title>
+</head>
+<body>
+<th:block th:fragment="navFragment">
+
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top im" id="nav">
+
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}"><span class="iconfont icon-huabanfuben" style="color:steelblue;"></span>&nbsp;ICanFly BBS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" th:href="@{/letter/new}" th:if="${session.user !=null}">✉私信</a>
+                        <a class="nav-link" onclick="show1()"
+                           th:if="${session.user ==null}">✉私信</a>
+                    </li>
+                    <li th:if="${session.user} == null" class="nav-item">
+                        <a class="nav-link active" href="#" th:href="@{/user/login}">登录</a>
+                    </li>
+                    <li th:if="${session.user} != null" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="user-dropdown" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false" th:text="${session.user.username}">Username</a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="user-dropdown">
+                            <a class="dropdown-item" href="#" th:href="@{/user/profile}">用户中心</a>
+                            <a class="dropdown-item" th:if="${session.user== true}" th:href="@{/demand/my}"
+                               href="#">已发布需求</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" th:href="@{/user/logout}">退出</a>
+                        </div>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0" th:action="@{/demand/search}">
+                    <div class="form-group" style="margin-right:110px">
+                        <input class="form-control mr-sm-2" name="keyword" id="navSer" th:value="${keyword}"
+                               style="border-radius: 7px;"
+                               type="text" placeholder="搜索一下吧" aria-label="Search">
+                    </div>
+                    <span class="iconfont icon-sousuo6" style="margin-left: -155px;font-weight: bold"></span>
+                </form>
+            </div>
+        </div>
+        <div id="hr1">
+            <hr/>
+        </div>
+    </nav>
+    <div id="message-bar" class="collapse">
+        <div class="container">
+            <span id="message-content"></span>
+            <span class="float-right">
+                <a data-toggle="collapse" href="#message-bar" title="关闭消息"><i class="mi mi-Cancel"></i></a>
+            </span>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

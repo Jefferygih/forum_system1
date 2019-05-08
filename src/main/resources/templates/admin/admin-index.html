@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: headFragment('论坛后台数据管理')">
+    <meta charset="UTF-8">
+    <title>论坛后台数据管理</title>
+</head>
+<body class="">
+<div class="page">
+    <div class="page-main">
+        <div class="header" th:replace="admin/fragments/header :: headerFragment"></div>
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">
+                        统计数据
+                    </h1>
+                </div>
+                <div class="row row-cards">
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <div class="card">
+                            <div class="card-body p-3 text-center">
+                                <div class="h1 m-0 mt-2" th:text="${themeCount}">13</div>
+                                <div class="text-muted mb-2">帖子数量</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <div class="card">
+                            <div class="card-body p-3 text-center">
+                                <div class="h1 m-0 mt-2" th:text="${userCount}">3</div>
+                                <div class="text-muted mb-2">用户数量</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <div class="card">
+                            <div class="card-body p-3 text-center">
+                                <div class="h1 m-0 mt-2" th:text="${responseCount}">7</div>
+                                <div class="text-muted mb-2">回复帖子数量</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <div class="card">
+                            <div class="card-body p-3 text-center">
+                                <div class="h1 m-0 mt-2" th:text="${resToResCount}">17</div>
+                                <div class="text-muted mb-2">指定回复的数量</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-lg-2">
+                        <div class="card">
+                            <div class="card-body p-3 text-center">
+                                <div class="h1 m-0 mt-2" th:text="${categoryCount}">17</div>
+                                <div class="text-muted mb-2">主题类别数量</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <div id="chart-demands" style="height: 400px"></div>
+                    </div>
+                    <script th:inline="javascript">
+                        require(['c3', 'jquery'], function (c3, $) {
+                            let pie = false;
+                            $(document).ready(function () {
+                                c3.generate({
+                                    bindto: '#chart-demands',
+                                    data: {
+                                        columns: [
+                                            ['data1', /*[[${userCount}]]*/ 5],
+                                            ['data2', /*[[${themeCount}]]*/ 10],
+                                            ['data3', /*[[${responseCount}]]*/ 15],
+                                            ['data4', /*[[${resToResCount}]]*/ 20]
+                                        ],
+                                        type: 'bar',
+                                        colors: {
+                                            'data1': tabler.colors["yellow-darker"],
+                                            'data2': tabler.colors["yellow-dark"],
+                                            'data3': tabler.colors["yellow"],
+                                            'data4': tabler.colors["yellow-light"],
+                                        },
+                                        names: {
+                                            'data1': '用户数',
+                                            'data2': '主题数',
+                                            'data3': '主题回复数',
+                                            'data4': '指定回复数'
+                                        },
+                                        onclick: function () {
+                                            if (pie) {
+                                                this.transform('bar');
+                                                pie = false;
+                                            } else {
+                                                this.transform('pie');
+                                                pie = true;
+                                            }
+                                        }
+                                    },
+                                    axis: {
+                                        x: {
+                                            type: 'category',
+                                            categories: ['帖子状态']
+                                        },
+                                        y: {
+                                            tick: {
+                                                format: function (x) {
+                                                    return x % 1 === 0 ? x : '';
+                                                }
+                                            }
+                                        }
+                                    },
+                                    tooltip: {
+                                        format: {
+                                            title: function () {
+                                                return '帖子数量统计';
+                                            }
+                                        },
+                                        grouped: false
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+                </div>
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <footer class="footer" th:replace="admin/fragments/footer :: footerFragment"></footer>
+</div>
+</body>
+</html>

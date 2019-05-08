@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headFragment(${title})">
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<nav th:replace="fragments/header :: navFragment"></nav>
+<main role="main">
+    <nav class="" id="nav1" style="" th:style="'background-color:'+${categoryIdColorMap.get(theme.categoryId)}">
+        <ul class="text-center text-white">
+            <li>
+                <a href="#" th:href="@{/(category=${theme.categoryId})}"><span id="span1"
+                                                                               class="badge badge-warning bg-white "
+                                                                               style=""
+                                                                               th:style="'color:'+${categoryIdColorMap.get(theme.categoryId)}"
+                                                                               th:text="${categoryMap.get(theme.categoryId)}">教育</span></a>
+            </li>
+            <li id="li1">
+                <span th:text="${theme.title}">XXX</span>
+            </li>
+        </ul>
+    </nav>
+    <div class="container container-main">
+        <div class="row slide-up-fade-in">
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-1">
+                        <div class="mx-auto position-relative">
+                            <a href="" th:href="@{/user/profile1/{id}(id=${theme.creatorId})}"> <img id="img1" src=""
+                                                                                                     class="card-img-top avatar"
+                                                                                                     th:src="@{'/image/' + ${idPhotoMap.get(theme.creatorId)}}"
+                                                                                                     alt="userAvatar"></a>
+                        </div>
+                        <!--<span class="button text-white " role="button" style="border-radius:100%;background-color: rebeccapurple ">✎</span>-->
+                    </div>
+                    <div class="col-11">
+                        <div id="name1">
+                            <a id="creatorName" href="/"> <span
+                                    th:text="${idNameMap.get(theme.creatorId)}">XXX</span></a> &nbsp;&nbsp;
+                            <span id="date1" th:text="${#dates.format(theme.publishTime,'yyyy年MM月dd日')}"></span>
+                        </div>
+
+                        </br>
+
+                        <div id="themeContent">
+                            <span th:text="${theme.content}"> </span>
+                        </div>
+
+                        <div id="themeImage" th:if="${theme.photo}!=null" class="mx-auto position-relative">
+                            <img id="imageTheme" src="" class="card-img-top avatar"
+                                 th:src="@{'/image/' + ${themeIdPhotoMap.get(theme.id)}}" alt="userAvatar">
+                        </div>
+
+                        <br>
+                        <div id="likeAndRes" class="float-right">
+                            <a style="cursor: pointer;" class="" id="" th:id="${theme.id}+'1666'" data-idtheme=""
+                               th:data-idtheme="${theme.id}" data-id="" th:data-id="${theme.id}+'1666'"
+                               data-id2="" th:data-id2="${theme.id}+'1998'"
+                               goods="" th:goods="${themeIdGoodsMap.get(theme.id)}"
+                               th:classappend="${theme.id}+'1666'" onclick="themeGood(this)"
+                               th:if="${session.user !=null}">
+                                <span><span class="iconfont icon-dianzan"></span></span>
+                            </a><span id="theme7" onclick="show1()" style="cursor: pointer;"
+                                      th:if="${session.user ==null}"><span class="iconfont icon-dianzan"></span></span>&nbsp;
+                            <span id="" th:id="${theme.id}+'1998'" th:classappend="${theme.id} +'1998'"
+                                  th:text="${themeIdGoodsMap.get(theme.id)}">99</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span id="response" style="cursor: pointer;" onclick="show()"
+                                  th:if="${session.user !=null&&session.user.getStatus()=='否'}"><span class="iconfont icon-pinglun"></span></span> <span
+                                id="response7" style="cursor: pointer;" onclick="show1()"
+                                th:if="${session.user ==null}"><span class="iconfont icon-pinglun"></span></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div id="response5" style="display: none;margin-top: 20px">
+                    <form method="post" enctype="multipart/form-data"
+                          th:action="@{/response/new/{themeId}(themeId=${theme.id})}"
+                          th:object="${response}">
+                        <div class="form-group">
+                            <textarea style="border-radius: 5px" placeholder="写点什么" id="theme-content"
+                                      class="form-control" required
+                                      rows="10" th:field="*{content}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="profile-photo1">上传图片</label>
+                            <input type="file" accept=".jpg,.png" id="profile-photo1" class="form-control"
+                                   name="photo"
+                                   th:field="*{photo}">
+                        </div>
+                        <input id="submit" class="btn btn-danger float-right" style="border-radius:5px " type="submit"
+                               value="发表回复">
+                    </form>
+                </div>
+
+
+                <ul class="list-group" style="margin-top: 50px">
+                    <div id="hr4">
+                        <hr/>
+                    </div>
+                    <div class="alert alert-warning text-center" style="margin-top: 20px"
+                         th:if="${responses.isEmpty()}">快来回复吧
+                    </div>
+                    <li class="list-group-item" th:each="response : ${responses}">
+                        <div class="row">
+                            <div class="col-1">
+                                <div class="mx-auto position-relative">
+                                    <a href="" th:href="@{/user/profile1/{id}(id=${response.responderId})}"> <img
+                                            id="img2" src="" class="card-img-top avatar"
+                                            th:src="@{'/image/' + ${idPhotoMap.get(response.responderId)}}"
+                                            alt="userAvatar"></a>
+                                </div>
+                                <!--<span class="button text-white " role="button" style="border-radius:100%;background-color: rebeccapurple ">✎</span>-->
+                            </div>
+                            <div class="col-11">
+                                <div id="name2">
+                                    <a id="responseName" href="/"> <span
+                                            th:text="${idNameMap.get(response.responderId)}">XXX</span></a> &nbsp;&nbsp;
+                                    <span id="date2"
+                                          th:text="${#dates.format(response.recoveryTime,'yyyy年MM月dd日')}"></span>
+                                </div>
+
+                                </br>
+
+                                <div id="responseContent">
+                                    <span th:text="${response.content}"> </span>
+                                </div>
+
+                                <div id="responseImage" th:if="${response.photo}!=null"
+                                     class="mx-auto position-relative">
+                                    <img
+                                            id="responseTheme" src="" class="card-img-top avatar"
+                                            th:src="@{'/image/' + ${responseIdPhotoMap.get(response.id)}}"
+                                            alt="userAvatar">
+                                </div>
+
+                                <br>
+                                <div id="likeAndRes1" class="float-right">
+                                    <a class="" id="" th:id="${response.id}" style="cursor: pointer;" data-id=""
+                                       th:data-id="${response.id}"
+                                       data-id2="" th:data-id2="${response.id}+'1'"
+                                       goods="" th:goods="${IdGoodsMap.get(response.id)}"
+                                       th:classappend="${response.id}" onclick="good(this)"
+                                       th:if="${session.user !=null}">
+                                        <spna><span class="iconfont icon-dianzan"></span></spna>
+                                    </a><span style="cursor: pointer;" id="theme89" onclick="show1()"
+                                              th:if="${session.user ==null}"><span class="iconfont icon-dianzan"></span></span>&nbsp;
+                                    <span id="" th:id="${response.id}+'1'" th:classappend="${response.id} +'1'"
+                                          th:text="${IdGoodsMap.get(response.id)}">99</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span style="cursor: pointer;" id="response2" theme-id="" th:theme-id="${theme.id}"
+                                          res-id=""
+                                          th:res-id="${response.id}" res-name=""
+                                          th:res-name="${idNameMap.get(response.responderId)}"
+                                          th:if="${session.user !=null&&session.user.getStatus()=='否'}"
+                                    ><span class="iconfont icon-pinglun"></span></span>
+                                    <span id="response15" style="cursor: pointer;" onclick="show1()"
+                                          th:if="${session.user ==null}"><span class="iconfont icon-pinglun"></span></span>&nbsp;&nbsp;
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div id="hr3">
+                            <hr/>
+                        </div>
+                    </li>
+                </ul>
+
+
+                <ul class="list-group" style="margin-top: 20px">
+                    <li class="list-group-item" th:each="responseToresponse : ${responseToresponses}">
+                        <div class="row">
+                            <div class="col-1">
+                                <div class="mx-auto position-relative">
+                                    <a href="" th:href="@{/user/profile1/{id}(id=${responseToresponse.userId})}"> <img
+                                            id="img3" src="" class="card-img-top avatar"
+                                            th:src="@{'/image/' + ${idPhotoMap.get(responseToresponse.userId)}}"
+                                            alt="userAvatar"></a>
+                                </div>
+                                <!--<span class="button text-white " role="button" style="border-radius:100%;background-color: rebeccapurple ">✎</span>-->
+                            </div>
+                            <div class="col-11">
+                                <div id="name3">
+                                    <a id="responseName1" href="/"> <span
+                                            th:text="${idNameMap.get(responseToresponse.userId)}">XXX</span></a> &nbsp;&nbsp;
+                                    <span id="date3"
+                                          th:text="${#dates.format(responseToresponse.recoveryTime,'yyyy年MM月dd日')}"></span>
+                                </div>
+
+                                </br>
+
+                                <div class="row" th:if="${responseToresponse.responseToresponseId!=null}">
+                                    <div class="col-sm-2 text-center"><span class="float-left"
+                                                                            style="font-weight:bold;font-size:15px;margin-top:-8px;background-color: #e4ebf6;border-radius: 5px;"
+                                                                            th:text="'⮪ '+ ${idNameMap.get(userIdResponseToresponseIdMap.get(responseToresponse.responseToresponseId))}"></span>
+                                    </div>
+
+                                </div>
+
+                                <div class="row"
+                                     th:if="${idNameMap.get(idResponderIdMap.get(responseToresponse.responseId))!=null}">
+                                    <div class="col-sm-2 text-center"><span class="float-left"
+                                                                            style="font-weight:bold;font-size:15px;margin-top:-8px;background-color: #e4ebf6;border-radius: 5px;"
+                                                                            th:text="'⮪ '+ ${idNameMap.get(idResponderIdMap.get(responseToresponse.responseId))}"></span>
+                                    </div>
+
+                                </div>
+
+                                </br>
+                                <div id="responseContent1">
+                                    <span th:text="${responseToresponse.content}"> </span>
+                                </div>
+
+
+                                <br>
+                                <div id="responseImage12" th:if="${responseToresponse.photo}!=null"
+                                     class="mx-auto position-relative">
+                                    <img
+                                            id="responseTheme55" src="" class="card-img-top avatar"
+                                            style="height: 200px;width: 180px"
+                                            th:src="@{'/image/' + ${responseToResIdPhotoMap.get(responseToresponse.id)}}"
+                                            alt="userAvatar">
+                                </div>
+                                <div id="likeAndRes2" class="float-right">
+                                    <a style="cursor: pointer;" class="" id="" th:id="${responseToresponse.id}+'1966'"
+                                       data-idRes="" th:data-idRes="${responseToresponse.id}" data-id=""
+                                       th:data-id="${responseToresponse.id}+'1966'"
+                                       data-id2="" th:data-id2="${responseToresponse.id}+'1558'"
+                                       goods="" th:goods="${responseToResIdGoodsMap.get(responseToresponse.id)}"
+                                       th:classappend="${responseToresponse.id}+'1966'"
+                                       onclick="ResponseToResgood(this)" th:if="${session.user !=null}">
+                                        <span><span class="iconfont icon-dianzan"></span></span>
+                                    </a><span style="cursor: pointer;" id="theme9" onclick="show1()"
+                                              th:if="${session.user ==null}"><span class="iconfont icon-dianzan"></span></span>&nbsp;
+                                    <span id="" th:id="${responseToresponse.id}+'1558'"
+                                          th:classappend="${responseToresponse.id} +'1558'"
+                                          th:text="${responseToResIdGoodsMap.get(responseToresponse.id)}">99</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span style="cursor: pointer;" id="response3" theme-id="" th:theme-id="${theme.id}"
+                                          res-id=""
+                                          th:res-id="${responseToresponse.id}" res-name=""
+                                          th:res-name="${idNameMap.get(responseToresponse.userId)}"
+                                          th:if="${session.user !=null&&session.user.getStatus()=='否'}"
+                                    ><span class="iconfont icon-pinglun"></span></span><span style="cursor: pointer;" id="response16" onclick="show1()"
+                                                    th:if="${session.user ==null}"><span class="iconfont icon-pinglun"></span></span>&nbsp;&nbsp;
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div id="hr6">
+                            <hr/>
+                        </div>
+                    </li>
+                    <div class="text-center" style="color:darkgrey;margin-top: 20px">到底了~</div>
+                </ul>
+
+
+            </div>
+        </div>
+    </div>
+</main>
+<div id="resAndsu" class="col-md-2">
+
+    <a id="response1" class="btn btn-info btn-block " role="button" href="#themeImage" onclick="show()"
+       th:if="${session.user !=null&&session.user.getStatus()=='否'}">回复</a>
+    <a id="response1" class="btn btn-info btn-block " role="button" href="#themeImage" onclick="show404()"
+       th:if="${session.user !=null&&session.user.getStatus()=='是'}">回复</a>
+    <a id="response8" class="btn btn-info btn-block " role="button" onclick="show1()"
+       th:if="${session.user ==null}">回复</a>
+    <a id="subs1" class="btn btn-light btn-block " role="button" th:href="@{#}" th:if="${session.user ==null}">订阅</a>
+    <a id="subs2" class="btn btn-light btn-block " role="button" th:if="${session.user !=null}">订阅</a>
+    <a id="response13" class="btn btn-warning btn-block " role="button" href=""
+       th:href="@{/theme/edit/{id}(id=${theme.id})}"
+       th:if="${session.user !=null && session.user.id == theme.creatorId}">修改</a>
+    <a id="response9" class="btn btn-danger btn-block " role="button" href=""
+       th:href="@{/theme/delete/{id}(id=${theme.id})}"
+       th:if="${session.user !=null && session.user.id == theme.creatorId}">删除</a>
+
+    <div id="response6" responseId="" style="display: none;margin-top: 30px;margin-right: 20px">
+        <form method="post" id="form" enctype="multipart/form-data"
+              th:object="${response}">
+            <div class="form-group" id="textarea1">
+                <textarea style="border-radius: 5px" placeholder="写点什么" class="form-control" required
+                          rows="6" th:field="*{content}"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="profile-photo">上传图片</label>
+                <input type="file" accept=".jpg,.png" id="profile-photo" class="form-control"
+                       name="photo"
+                       th:field="*{photo}">
+            </div>
+
+            <input id="submit1" class="btn btn-danger float-right" style="border-radius:5px " type="submit"
+                   value="发表回复">
+        </form>
+    </div>
+
+</div>
+
+
+</body>
+</html>

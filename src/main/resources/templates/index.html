@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headFragment(${title})">
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<nav th:replace="fragments/header :: navFragment"></nav>
+
+<main role="main">
+    <!--<div class="welcome-bar" style="background-color: #F8F8FF;border-radius: 10px" th:if="${session.user == null}">-->
+    <!--<div class="container">-->
+    <!--<span class="font-weight-bold">欢迎来到 ICanFly BBS</span>。<span style="color: darkgrey;font-size: 15px">欢迎来到ICanFly 论坛，互联网中有各种各样的论坛网站，但是有些网友希望建立自己的小圈子，使用自己运行的论坛。虽然已经有一些开源的论坛程序，但是它们往往比较传统化，而且功能复杂，不便于管理。此时我们就作为一个较为简单但提供完善的论坛功能的程序，为小圈子提供服务。</span>-->
+    <!--<br><a th:href="@{/user/login}" class="d-inline-block">立即登录 &raquo;</a>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <div class="alert alert-dismissible fade show text-center" role="alert" style="background-color:#e4ebf6"
+         th:if="${session.user == null}">
+        <div class="container">
+            <span style="color:#667a99;font-size: 22px;">欢迎来到 ICanFly BBS!</span>
+            <br><span style="color:#667a99;font-size: 15px;">欢迎来到ICanFly 论坛，互联网中有各种各样的论坛网站，但是有些网友希望建立自己的小圈子，使用自己运行的论坛。虽然已经有一些开源的论坛程序，但是它们往往比较传统化，而且功能复杂，不便于管理。此时我们就作为一个较为简单但提供完善的论坛功能的程序，为小圈子提供服务。</span>
+            <br><a th:href="@{/user/login}" class="d-inline-block" style="font-weight: bold;color: #00b3ff">立即登录
+            &raquo;</a>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+    </div>
+    <div class="container container-main">
+        <!-- Example row of columns -->
+        <h2 class="h2" th:if="${isSearch}">搜索结果</h2>
+        <div class="row slide-up-fade-in">
+            <!-- Left column -->
+            <div class="col-md-2">
+                <div class="form-group" th:if="${!isSearch}">
+                    <a class="btn btn-primary btn-block " style="border-radius: 5px;" role="button"
+                       th:href="@{/theme/new}" th:if="${session.user !=null&&session.user.getStatus()=='否'}">新的话题</a>
+                    <a class="btn btn-primary btn-block " style="border-radius: 5px;" role="button"
+                       onclick="show1()" th:if="${session.user ==null}">新的话题</a>
+                    <a class="btn btn-primary btn-block " style="border-radius: 5px;" role="button"
+                       onclick="show404()" th:if="${session.user !=null&&session.user.getStatus()=='是'}">新的话题</a>
+
+                    <a class="btn btn-light btn-block" role="button" th:href="@{/category/view}">分类</a>
+                    <a class="btn" style="margin-bottom: 25px;" role="button" th:href="@{/}"
+                       th:classappend="${categoryId == 0 ? 'btn-warning btn-sm btn-block' : 'btn-outline-warning btn-sm btn-block'}">所有话题</a>
+                    <div id="categ2" th:each="category : ${categoryMap}">
+                        <span class="badge badge-dark"
+                              th:style="'height:10px;border-radius:4px;background-color:'+ ${categoryIdColorMap.get(category.key)}+';color:'+${categoryIdColorMap.get(category.key)}">1</span>
+                        <a id="categ1" href="#" data-toggle="tooltip" data-placement="right" title="${category.content}"
+                           th:title="${categoryIdContentMap.get(category.key)}" th:text="${category.value}"
+                           th:style="'color:'+${categoryIdColorMap.get(category.key)}"
+                           th:href="@{/(category=${category.key})}"
+                        >分类</a><br>
+                    </div>
+                </div>
+                <hr>
+
+
+            </div> <!-- /Left column -->
+
+            <!-- Right column -->
+            <div class="col-md-9">
+                <div class="alert alert-info text-center" th:if="${themes.content.isEmpty()}">没有找到任何帖子</div>
+                <ul class="list-group" th:if="${categoryId == 0}">
+                    <li class="list-group-item" id="list-group-item2" th:each="announcement : ${announcements}">
+                        <div class="row">
+
+                            <div class="col-1">
+                                <div class="mx-auto position-relative">
+                                    <a href="" th:href="@{/user/profile1/{id}(id=${announcement.creatorId})}"> <img
+                                            src="" style="border-radius:100%;float:right; width: 50px;height: 50px;"
+                                            class="card-img-top avatar"
+                                            th:src="@{'/image/' + ${idPhotoMap.get(announcement.creatorId)}}"
+                                            alt="userAvatar"></a>
+                                </div>
+                                <!--<span class="button text-white " role="button" style="border-radius:100%;background-color: rebeccapurple ">✎</span>-->
+                            </div>
+                            <div class="col-11">
+                                <div style="font-weight:bold; font-size: 18px; margin-bottom:-23px;">
+                                    <a id="announcementTitle" style="text-decoration: none;color: black;" href="/"
+                                       th:href="@{/theme/view/{id}(id=${announcement.id})}"> <span
+                                            th:text="${announcement.title}">XXX</span></a>
+                                    <a href="#" th:href="@{/(category=${announcement.categoryId})}"> <span
+                                            class="badge badge-dark float-right" style=""
+                                            th:style="'font-weight: bold;border-radius: 3px;background-color:'+${categoryIdColorMap.get(announcement.categoryId)}"
+                                            th:text="${categoryMap.get(announcement.categoryId)}">教育 </span></a>
+                                    <span class="badge badge-danger float-right"
+                                          style="border-radius: 2px;font-weight: bold;"
+                                          th:text="置顶">置顶</span>
+                                </div>
+                                </br>
+                                <div style="font-size: 14px; color: darkgrey;">
+
+
+                                <span style="font-weight: bold;color: darkgrey;">➥ <a href=""
+                                                                                      style=" text-decoration: none;color: darkgrey;"
+                                                                                      th:text="${idNameMap.get(announcement.creatorId)}"></a></span>
+                                    <span th:text="${'创建于:'+ #dates.format(announcement.publishTime,'yyyy-MM-dd HH:mm')}"></span>
+                                    <span class="float-right" style="color: darkgrey"
+                                          th:text="${announcement.resNumber}"></span>
+                                    <span class="iconfont icon-pinglun1 float-right" data-toggle="tooltip"
+                                          data-placement="bottom" title="帖子评论数量"
+                                          style="color: darkgrey;margin-right: 5px"></span>
+
+                                </div>
+
+                                </br>
+                                <div style="font-size: 13px; color: darkgrey; margin-top: -16px;">
+                                    <span style="color: darkgrey;" th:text="${announcement.content}"> </span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </li>
+
+                </ul>
+
+
+                <ul class="list-group" id="list-group1">
+                    <li class="list-group-item" id="list-group-item1" th:each="theme : ${themes.content}">
+
+
+                        <div class="row">
+
+                            <div class="col-1">
+                                <div class="mx-auto position-relative">
+                                    <a href="" th:href="@{/user/profile1/{id}(id=${theme.creatorId})}"> <img src=""
+                                                                                                             style="border-radius:100%;float:right;width: 50px;height: 50px;"
+                                                                                                             class="card-img-top avatar"
+                                                                                                             th:src="@{'/image/' + ${idPhotoMap.get(theme.creatorId)}}"
+                                                                                                             alt="userAvatar"></a>
+                                </div>
+                            </div>
+                            <div class="col-11">
+                                <div style="font-weight:bold; font-size: 18px; margin-bottom:-23px;">
+                                    <a id="themeTitle" style="text-decoration: none;color: black;" href="/"
+                                       th:href="@{/theme/view/{id}(id=${theme.id})}"> <span
+                                            th:text="${theme.title}">XXX</span></a>
+
+                                    <a href="#" th:href="@{/(category=${theme.categoryId})}"> <span
+                                            class="badge badge-warning float-right" style=""
+                                            th:style="'font-weight: bold;border-radius: 3px;background-color:'+${categoryIdColorMap.get(theme.categoryId)}"
+                                            th:text="${categoryMap.get(theme.categoryId)}">教育</span></a>
+
+
+                                </div>
+                                </br>
+                                <div id="text" style="font-size: 14px; color: darkgrey;">
+
+
+                                <span style="font-weight: bold;color: darkgrey;">➥ <a href=""
+                                                                                      style=" text-decoration: none;color: darkgrey;"
+                                                                                      th:text="${idNameMap.get(theme.creatorId)}"></a></span>
+                                    <span th:text="${'创建于:'+ #dates.format(theme.publishTime,'yyyy-MM-dd HH:mm')}"></span>
+                                    <span class="float-right" style="color: darkgrey"
+                                          th:text="${theme.resNumber}"></span>
+                                    <span class="iconfont icon-pinglun1 float-right" data-toggle="tooltip"
+                                          data-placement="bottom" title="帖子评论数量"
+                                          style="color: darkgrey;margin-right: 5px"></span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </li>
+
+                </ul>
+
+
+                <div style="margin-top: 10px;margin-left: 240px" th:if="${!isSearch}">
+                    <!-- pagination -->
+                    <nav aria-label="Page navigation" th:if="${themes.totalPage > 1}">
+                        <ul class="pagination" th:if="${categoryId == 0}">
+                            <li class="page-item" th:if="${!themes.isFirst()}">
+                                <a class="page-link" href="#" aria-label="Previous"
+                                   th:href="@{/(page=${themes.currentPage - 1})}">
+                                <span aria-hidden="true">
+                                    <i class="mi mi-ChevronLeft"></i> Prev
+                                </span>
+                                    <span class="sr-only">Prev</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:if="${themes.totalPage > 0}"
+                                th:each="i : ${#numbers.sequence(1, themes.getTotalPage())}"
+                                th:classappend="${themes.currentPage == i ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/(page=${i})}" th:text="${i}">1</a>
+                            </li>
+                            <li class="page-item" th:if="${!themes.isLast()}">
+                                <a class="page-link" href="#" aria-label="Next"
+                                   th:href="@{/(page=${themes.currentPage + 1})}">
+                                <span aria-hidden="true">Next
+                                    <i class="mi mi-ChevronRight"></i>
+                                </span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="pagination" th:if="${categoryId != 0}">
+                            <li class="page-item" th:if="${!themes.isFirst()}">
+                                <a class="page-link" href="#" aria-label="Previous"
+                                   th:href="@{/(category=${categoryId}, page=${themes.currentPage - 1})}">
+                                <span aria-hidden="true">
+                                    <i class="mi mi-ChevronLeft"></i> Prev
+                                </span>
+                                    <span class="sr-only">Prev</span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:if="${themes.totalPage > 0}"
+                                th:each="i : ${#numbers.sequence(1, themes.getTotalPage())}"
+                                th:classappend="${themes.currentPage == i ? 'active' : ''}">
+                                <a class="page-link" th:href="@{/(category=${categoryId}, page=${i})}">1</a>
+                            </li>
+                            <li class="page-item" th:if="${!themes.isLast()}">
+                                <a class="page-link" href="#" aria-label="Next"
+                                   th:href="@{/(category=${categoryId}, page=${themes.currentPage + 1})}">
+                                <span aria-hidden="true">Next
+                                    <i class="mi mi-ChevronRight"></i>
+                                </span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+
+                    <!--<div class="card">-->
+                    <!--<div class="card-header">公告</div>-->
+                    <!--<div class="card-body">-->
+                    <!--<ul class="card-ul">-->
+                    <!--<li th:each="announcement : ${announcements.content}">-->
+                    <!--<a th:href="@{/announcements/{id}(id=${announcement.id})}"-->
+                    <!--th:text="'&nbsp;'+ ${announcement.title} + '&nbsp;'">1</a>-->
+                    <!--</li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+
+        </div><!-- /Right column -->
+    </div> <!-- /container -->
+</main>
+
+<footer th:replace="fragments/footer :: footerFragment"></footer>
+</body>
+</html>
